@@ -96,7 +96,7 @@ var miner = setInterval(() => {
         console.log(chalk.gray("[APP]: ") + chalk.blue(currentint))
 
         //if (data.owner.username == "" || !data.owner && data.isLocked == false || !data.isLocked && data.publicEntryAllowed == true) {
-        if (data.owner == null || !data.owner && data.isLocked == false || !data.isLocked && data.publicEntryAllowed == true) {
+        if (data.owner.DisplayName == "" && data.IsLocked != true && data.PublicEntryAllowed == true) {
             valid(data)
         }
     }).catch((err) => {
