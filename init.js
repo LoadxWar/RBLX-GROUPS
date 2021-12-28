@@ -35,6 +35,7 @@ const preferences = { // err config ⚙️
     proxy: true, // https://proxyscrape.com/free-proxy-list
     proxyFile: "http_proxies.txt", // exstension is required
 
+    // You can leave "dWebhook" empty.
     // Intro to webhooks : https://support.discord.com/hc/en-us/articles/228383668
     // dWebhook2 Optional, only required if you're having interval on very low (near 1)
     dWebhook: "",
