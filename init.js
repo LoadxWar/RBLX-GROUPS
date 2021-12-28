@@ -17,7 +17,7 @@ const preferences = { // err config ⚙️
         url: "",
     },
     int: { // group id
-        min: 5000000,
+        min: 0,
         max: 10000000,
     },
     interval: 5,
