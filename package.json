@@ -1,0 +1,19 @@
+{
+  "name": "rblx-groups",
+  "version": "1.0.0",
+  "description": "A Roblox Group Finder",
+  "main": "init.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cloud-Zone-Bots/RBLX-GROUPS.git"
+  },
+  "author": "completelyfcked#0001",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Cloud-Zone-Bots/RBLX-GROUPS/issues"
+  },
+  "homepage": "https://github.com/Cloud-Zone-Bots/RBLX-GROUPS#readme"
+}
