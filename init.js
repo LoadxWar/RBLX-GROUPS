@@ -2,6 +2,7 @@ const axios = require("axios").default
 const fs = require("fs")
 const chalk = require('chalk')
 
+console.clear()
 console.log(chalk.redBright("██████╗░██████╗░██╗░░░░░██╗░░██╗░░░░░░░██████╗░██████╗░░█████╗░██╗░░░██╗██████╗░░██████╗"))
 console.log(chalk.redBright("██╔══██╗██╔══██╗██║░░░░░╚██╗██╔╝░░░░░░██╔════╝░██╔══██╗██╔══██╗██║░░░██║██╔══██╗██╔════╝"))
 console.log(chalk.redBright("██████╔╝██████╦╝██║░░░░░░╚███╔╝░█████╗██║░░██╗░██████╔╝██║░░██║██║░░░██║██████╔╝╚█████╗░"))
@@ -16,41 +17,57 @@ const preferences = { // err config ⚙️
         url: "",
     },
     int: { // group id
-        min: 50000,
-        max: 100000,
+        min: 1000000,
+        max: 10000000,
     },
-    interval: 1000,
+    interval: 5000,
     logToFile: {
         enabled: true,
         fileName: "log" // exstension will be added automaticly
     },
     repeat: true, // "true" for continues || "false" for 1 time
+    proxy: true,
 }
 
 if (preferences.logToFile.enabled) {
     var wStream = fs.createWriteStream(preferences.logToFile.fileName + ".txt")
 }
 
-var currentProxy = {};
+var currentProxy = { host: null, port: null };
+function axiosConfig(host, port) {
+    if (!preferences.proxy) return {};
+
+    return {
+        proxy: {
+            host: host,
+            port: port
+        }
+    };
+}
 function newProxy() {
-    axios.get("https://api.getproxylist.com/proxy").then((res, req) => {
-        currentProxy.host = res.data.ip
-        currentProxy.port = res.data.port
+    if (!preferences.proxy) return;
+
+    axios.get("yourAPI").then((res, req) => {
+        currentProxy.host = res.data.ip // modify data so it points to the right thing
+        currentProxy.port = parseInt(res.data.port, 10)
     })
 }
 
 var currentint = preferences.int.min;
 var miner = setInterval(() => {
-    if (!preferences.started == 1) { console.log(chalk.gray("[APP]:") + chalk.greenBright(" Started")); preferences.started++; } // dont you dare change this 🔫
+    if (!preferences.started == 1) { console.log(chalk.gray("[APP]:") + chalk.greenBright(" Started")); preferences.started++; if (preferences.proxy) newProxy(); } // dont you dare change this 🔫
     if (currentint > preferences.int.max) return end(); else { currentint++; };
 
+    if (preferences.proxy) {
+        //console.log(chalk.gray("[APP]: ") + "starting request with proxy " + `${currentProxy.host}:${currentProxy.port}`)
+    } else {
+        //console.log(chalk.gray("[APP]: ") + "starting request")
+    };
+
+    var conf = axiosConfig(currentProxy.host, currentProxy.port)
+
     axios.get(`https://groups.roblox.com/v1/groups/${currentint}`,
-        {
-            proxy: {
-                host: "http://" + currentProxy.host,
-                port: currentProxy.port
-            }
-        }
+        conf
     ).then((res, req) => {
         var data = res.data;
 
@@ -61,12 +78,16 @@ var miner = setInterval(() => {
         }
     }).catch((err) => {
         if (err.response) {
-            if (err.response.status == 429) {
-                console.log(chalk.gray("[APP]:") + chalk.red(" 429"))
+            var done = 0;
 
-                newProxy()
+            if (err.response.status == 429 || res.status == 429) {
+                console.log(chalk.gray("[APP]:") + chalk.red(" 429"))
+                if (preferences.proxy) newProxy();
+                done++;
             };
-            
+
+            if (done == 1) return;
+
             console.error(err)
         }
     })
