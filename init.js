@@ -17,21 +17,28 @@ const preferences = { // err config ⚙️
         url: "",
     },
     int: { // group id
-        min: 1000000,
+        min: 3000000,
         max: 10000000,
     },
-    interval: 10,
+    interval: 5,
+    /**
+     * Over 600 groups per minute if "interval" is below 100.
+     * 
+     * 60000/(interval)
+     */
     logToFile: {
         enabled: true,
         fileName: "log" // exstension will be added automaticly
     },
     repeat: true, // "true" for continues || "false" for 1 time
-    proxy: true,
+    proxy: true, // https://proxyscrape.com/free-proxy-list
     proxyFile: "http_proxies.txt",
 }
 
 if (preferences.logToFile.enabled) {
     var wStream = fs.createWriteStream(preferences.logToFile.fileName + ".txt")
+
+    wStream.write("\n\nMade by completelyfcked#0001\nGroups can be unable to load, the Roblox do api does not show if it loads or not.\n\n")
 }
 
 var currentProxy = { host: null, port: null, index: 0 };
@@ -84,7 +91,8 @@ var miner = setInterval(() => {
 
         console.log(chalk.gray("[APP]: ") + chalk.blue(currentint))
 
-        if (data.owner == null) {
+        //if (data.owner.username == "" || !data.owner && data.isLocked == false || !data.isLocked && data.publicEntryAllowed == true) {
+        if (data.owner == null || !data.owner && data.isLocked == false || !data.isLocked && data.publicEntryAllowed == true) {
             valid(data)
         }
     }).catch((err) => {
@@ -125,8 +133,8 @@ function end() {
 
 function valid(data) {
     if (preferences.logToFile.enabled) {
-        wStream.write(`${data.name} (${data.id})`)
+        wStream.write(`${data.name} - ${data.id}\n`)
     }
 
-    console.warn(`[APP]: ${data.name} (${data.id})`)
+    console.warn(chalk.gray("[APP]:") + chalk.bgGreenBright.whiteBright(`${data.name} - ${data.id}`))
 }
