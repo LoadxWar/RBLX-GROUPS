@@ -41,6 +41,8 @@ if (preferences.logToFile.enabled) {
     wStream.write("\n\nMade by completelyfcked#0001\nGroups can be unable to load, the Roblox do api does not show if it loads or not.\n\n")
 }
 
+var stats = { groupsFound: 0, requestsMade: 0 }
+
 var currentProxy = { host: null, port: null, index: 0 };
 function axiosConfig(host, port) {
     if (!preferences.proxy) return {};
@@ -87,6 +89,8 @@ var miner = setInterval(() => {
     axios.get(`https://groups.roblox.com/v1/groups/${currentint}`,
         conf
     ).then((res, req) => {
+        stats.requestsMade++; updateStats();
+
         var data = res.data;
 
         console.log(chalk.gray("[APP]: ") + chalk.blue(currentint))
@@ -137,4 +141,9 @@ function valid(data) {
     }
 
     console.warn(chalk.gray("[APP]:") + chalk.bgGreenBright.whiteBright(`${data.name} - ${data.id}`))
+    stats.groupsFound++; updateStats()
+}
+
+function updateStats() {
+    process.title = `RBLX-GROUPS | ${stats.requestsMade} Requests - ${stats.groupsFound} Groups`
 }
