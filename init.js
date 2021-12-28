@@ -20,20 +20,21 @@ const preferences = { // err config ⚙️
         min: 1000000,
         max: 10000000,
     },
-    interval: 5000,
+    interval: 10,
     logToFile: {
         enabled: true,
         fileName: "log" // exstension will be added automaticly
     },
     repeat: true, // "true" for continues || "false" for 1 time
     proxy: true,
+    proxyFile: "http_proxies.txt",
 }
 
 if (preferences.logToFile.enabled) {
     var wStream = fs.createWriteStream(preferences.logToFile.fileName + ".txt")
 }
 
-var currentProxy = { host: null, port: null };
+var currentProxy = { host: null, port: null, index: 0 };
 function axiosConfig(host, port) {
     if (!preferences.proxy) return {};
 
@@ -47,21 +48,31 @@ function axiosConfig(host, port) {
 function newProxy() {
     if (!preferences.proxy) return;
 
-    axios.get("yourAPI").then((res, req) => {
-        currentProxy.host = res.data.ip // modify data so it points to the right thing
-        currentProxy.port = parseInt(res.data.port, 10)
-    })
+    var proxies = fs.readFileSync(preferences.proxyFile)
+    proxies = proxies.toString().split("\n")
+
+    if (!proxies[currentProxy.index++]) {
+        currentProxy.index = 0;
+    }
+
+    var proxy = proxies[currentProxy.index++]
+    proxy = proxy.toString().split(":")
+
+    currentProxy.host = proxy[0]
+    currentProxy.port = proxy[1]
 }
 
 var currentint = preferences.int.min;
 var miner = setInterval(() => {
-    if (!preferences.started == 1) { console.log(chalk.gray("[APP]:") + chalk.greenBright(" Started")); preferences.started++; if (preferences.proxy) newProxy(); } // dont you dare change this 🔫
+    if (!preferences.started == 1) { console.log(chalk.gray("[APP]:") + chalk.greenBright(" Started")); preferences.started++; } // dont you dare change this 🔫
     if (currentint > preferences.int.max) return end(); else { currentint++; };
 
     if (preferences.proxy) {
-        //console.log(chalk.gray("[APP]: ") + "starting request with proxy " + `${currentProxy.host}:${currentProxy.port}`)
+        console.log(chalk.gray("[APP]: ") + "starting request with proxy " + `${currentProxy.host}:${currentProxy.port}`)
+
+        newProxy()
     } else {
-        //console.log(chalk.gray("[APP]: ") + "starting request")
+        console.log(chalk.gray("[APP]: ") + "starting request")
     };
 
     var conf = axiosConfig(currentProxy.host, currentProxy.port)
@@ -71,24 +82,33 @@ var miner = setInterval(() => {
     ).then((res, req) => {
         var data = res.data;
 
-        console.log(chalk.gray("[APP]: ") + currentint)
+        console.log(chalk.gray("[APP]: ") + chalk.blue(currentint))
 
-        if (data.publicEntryAllowed == true && data.owner == null) {
+        if (data.owner == null) {
             valid(data)
         }
     }).catch((err) => {
         if (err.response) {
             var done = 0;
 
-            if (err.response.status == 429 || res.status == 429) {
-                console.log(chalk.gray("[APP]:") + chalk.red(" 429"))
-                if (preferences.proxy) newProxy();
+            if (err.response.status == 429) {
+                console.warn(chalk.gray("[APP]:") + chalk.red(" 429 (RATE LIMIT)"))
                 done++;
+            } else if (err.response.status == 502) {
+                console.log(chalk.gray("[APP]:") + chalk.red(" 502 (BAD GATEWAY)"))
+                done++;
+            } else if (err.response.status == 404) {
+                console.log(chalk.gray("[APP]:") + chalk.red(" 404 (NOT FOUND)"))
+                done++;
+            } else if (err.response.status == 503) {
+                console.error(chalk.gray("[APP]:") + chalk.red(" 503 (TOO MANY OPEN CONNECTIONS)"))
+                done++;
+            } else if (err.response.status == 403) {
+                console.log(chalk.gray("[APP]:") + chalk.red(" 403 (FORBIDDEN)"))
+                done++;
+            } else {
+                console.log(chalk.gray("[APP]: ") + chalk.red(err.response.status))
             };
-
-            if (done == 1) return;
-
-            console.error(err)
         }
     })
 }, preferences.interval)
