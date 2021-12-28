@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Cloud-Zone-Bots/RBLX-GROUPS/issues"
   },
-  "homepage": "https://github.com/Cloud-Zone-Bots/RBLX-GROUPS#readme"
+  "homepage": "https://github.com/Cloud-Zone-Bots/RBLX-GROUPS#readme",
+  "dependencies": {
+    "axios": "^0.24.0"
+  }
 }
