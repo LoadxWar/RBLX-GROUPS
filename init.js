@@ -17,10 +17,10 @@ const preferences = { // err config ⚙️
         url: "",
     },
     int: { // group id
-        min: 100000,
+        min: 0,
         max: 10000000,
     },
-    interval: 5,
+    interval: 3,
     /**
      * Over 600 requests per minute if "interval" is below 100.
      * 
@@ -35,13 +35,15 @@ const preferences = { // err config ⚙️
     proxyFile: "http_proxies.txt", // exstension is required
 
     // Intro to webhooks : https://support.discord.com/hc/en-us/articles/228383668
-    dWebhook: ""
+    // dWebhook2 Optional, only required if you're having interval on very low (near 1)
+    dWebhook: "",
+    dWebhook2: ""
 }
 
 if (preferences.logToFile.enabled) {
     var wStream = fs.createWriteStream(preferences.logToFile.fileName + ".txt")
 
-    wStream.write("Made by completelyfcked#0001\nGroups can be unable to load, the Roblox do api does not show if it loads or not.\n")
+    wStream.write("Made by completelyfcked#0001\nGroups can be unable to load, the Roblox API does not show if it loads or not.\n")
 }
 
 var stats = { groupsFound: 0, requestsMade: 0 }
@@ -96,9 +98,10 @@ var miner = setInterval(() => {
 
         console.log(chalk.gray("[APP]: ") + chalk.blue(currentint))
 
-        //if (data.owner.username == "" || !data.owner && data.isLocked == false || !data.isLocked && data.publicEntryAllowed == true) {
-        if (data.owner.DisplayName == "" && data.IsLocked != true && data.PublicEntryAllowed == true) {
-            valid(data)
+        if (!data.owner) {
+            if (!data.isLocked) {
+                valid(data)
+            }
         }
     }).catch((err) => {
         if (err.response) {
@@ -146,43 +149,63 @@ function valid(data,) {
 
     if (!preferences.dWebhook == "") {
         axios.post(preferences.dWebhook,
-            {
-                "content": null,
-                "embeds": [
-                    {
-                        "title": "Group Found",
-                        "url": "https://www.roblox.com/groups/" + data.id,
-                        "color": 1638178,
-                        "fields": [
-                            {
-                                "name": "Name",
-                                "value": data.name,
-                                "inline": true
-                            },
-                            {
-                                "name": "Members",
-                                "inline": true,
-                                "value": data.memberCount
-                            }
-                        ],
-                        "author": {
-                            "name": "completelyfcked#0001",
-                            "url": "https://discord.com/users/449250687868469258",
-                            "icon_url": "https://cdn.discordapp.com/attachments/906456481589768192/925122166540869692/completelyf_trans.png"
-                        },
-                        "thumbnail": {
-                            "url": "https://external-preview.redd.it/9HZBYcvaOEnh4tOp5EqgcCr_vKH7cjFJwkvw-45Dfjs.png?auto=webp&s=ade9b43592942905a45d04dbc5065badb5aa3483"
-                        },
-                        "footer": {
-                            "text": "Thumbnail is currently not supported."
-                        }
-                    }
-                ]
-            }
-        )
+            webhook(data)
+        ).catch((err) => {
+            if (!preferences.dWebhook2) {
+                return console.error(chalk.gray("[APP]:") + chalk.red(`Discord Webhook`));
+            };
+
+            axios.post(preferences.dWebhook2,
+                webhook(data)
+            ).catch((err) => {
+                return console.error(chalk.gray("[APP]:") + chalk.red(`Discord Webhook Error`));
+            })
+        })
     }
 }
 
 function updateStats() {
     process.title = `RBLX-GROUPS | ${stats.requestsMade} Requests - ${stats.groupsFound} Groups`
+}
+
+function webhook(data) {
+    return {
+        "content": null,
+        "embeds": [
+            {
+                "title": "Group Found",
+                "description": "The groups have a high chance of not loading because they are too outdated.",
+                "url": "https://www.roblox.com/groups/" + data.id,
+                "color": 1638178,
+                "fields": [
+                    {
+                        "name": "Name",
+                        "value": data.name,
+                        "inline": true
+                    },
+                    {
+                        "name": "Members",
+                        "inline": true,
+                        "value": data.memberCount
+                    },
+                    {
+                        "name": "Id",
+                        "inline": true,
+                        "value": data.id
+                    }
+                ],
+                "author": {
+                    "name": "completelyfcked#0001",
+                    "url": "https://discord.com/users/449250687868469258",
+                    "icon_url": "https://cdn.discordapp.com/attachments/906456481589768192/925122166540869692/completelyf_trans.png"
+                },
+                "thumbnail": {
+                    "url": "https://external-preview.redd.it/9HZBYcvaOEnh4tOp5EqgcCr_vKH7cjFJwkvw-45Dfjs.png?auto=webp&s=ade9b43592942905a45d04dbc5065badb5aa3483"
+                },
+                "footer": {
+                    "text": "Thumbnail is currently not supported."
+                }
+            }
+        ]
+    }
 }
