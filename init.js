@@ -144,7 +144,7 @@ function valid(data,) {
         wStream.write(`${data.name} - ${data.id}\n`)
     }
 
-    console.warn(chalk.gray("[APP]:") + chalk.bgGreenBright.whiteBright(`${data.name} - ${data.id}`))
+    console.warn(chalk.gray("[APP]:") + chalk.bgGreenBright.blackBright(`${data.name} - ${data.id}`))
     stats.groupsFound++; updateStats()
 
     if (!preferences.dWebhook == "") {
@@ -174,7 +174,7 @@ function webhook(data) {
         "embeds": [
             {
                 "title": "Group Found",
-                "description": "The groups have a high chance of not loading because they are too outdated.",
+                "description": "The groups have a high chance of not loading because they are too outdated.\nMake sure to check `" + preferences.logToFile.fileName + ".txt` for the more accurate results since Discord doesn't like so many post requests to a webhook.",
                 "url": "https://www.roblox.com/groups/" + data.id,
                 "color": 1638178,
                 "fields": [
