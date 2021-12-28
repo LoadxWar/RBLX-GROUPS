@@ -21,6 +21,7 @@ const preferences = { // err config ⚙️
         max: 10000000,
     },
     interval: 3,
+    startingRequestMessages: false,
     /**
      * Over 600 requests per minute if "interval" is below 100.
      * 
@@ -82,11 +83,15 @@ var miner = setInterval(() => {
     if (currentint > preferences.int.max) return end(); else { currentint++; };
 
     if (preferences.proxy) {
-        console.log(chalk.gray("[APP]: ") + "starting request with proxy " + `${currentProxy.host}:${currentProxy.port}`)
+        if (preferences.startingRequestMessages) {
+            console.log(chalk.gray("[APP]: ") + "starting request with proxy " + `${currentProxy.host}:${currentProxy.port}`)
+        }
 
         newProxy()
     } else {
-        console.log(chalk.gray("[APP]: ") + "starting request")
+        if (preferences.startingRequestMessages) {
+            console.log(chalk.gray("[APP]: ") + "starting request")
+        }
     };
 
     var conf = axiosConfig(currentProxy.host, currentProxy.port)
