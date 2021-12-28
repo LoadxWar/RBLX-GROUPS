@@ -28,7 +28,7 @@ const preferences = { // err config ⚙️
      */
     logToFile: {
         enabled: true,
-        fileName: "log" // exstension will be added automaticly
+        fileName: Date.now().toString() // exstension will be added automaticly 'fileName: "log"'
     },
     repeat: true, // "true" for continues || "false" for 1 time
     proxy: true, // https://proxyscrape.com/free-proxy-list
