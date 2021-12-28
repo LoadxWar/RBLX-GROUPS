@@ -17,10 +17,10 @@ const preferences = { // err config ⚙️
         url: "",
     },
     int: { // group id
-        min: 2500000,
+        min: 100000,
         max: 10000000,
     },
-    interval: 1000,
+    interval: 5,
     /**
      * Over 600 requests per minute if "interval" is below 100.
      * 
@@ -32,7 +32,7 @@ const preferences = { // err config ⚙️
     },
     repeat: true, // "true" for continues || "false" for 1 time
     proxy: true, // https://proxyscrape.com/free-proxy-list
-    proxyFile: "",
+    proxyFile: "http_proxies.txt", // exstension is required
 
     // Intro to webhooks : https://support.discord.com/hc/en-us/articles/228383668
     dWebhook: ""
