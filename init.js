@@ -22,6 +22,7 @@ const preferences = { // err config ⚙️
     },
     interval: 3,
     startingRequestMessages: false,
+    errorMessages: false,
     /**
      * Over 600 requests per minute if "interval" is below 100.
      * 
@@ -110,7 +111,7 @@ var miner = setInterval(() => {
             }
         }
     }).catch((err) => {
-        if (err.response) {
+        if (err.response && preferences.errorMessages) {
             var done = 0;
 
             if (err.response.status == 429) {
@@ -157,14 +158,18 @@ function valid(data,) {
         axios.post(preferences.dWebhook,
             webhook(data)
         ).catch((err) => {
-            if (!preferences.dWebhook2) {
-                return console.error(chalk.gray("[APP]:") + chalk.red(`Discord Webhook`));
+            if (!preferences.dWebhook2 && preferences.errorMessages) {
+                return console.error(chalk.gray("[APP]:") + chalk.red(`Discord Webhook Error`));
             };
 
             axios.post(preferences.dWebhook2,
                 webhook(data)
             ).catch((err) => {
-                return console.error(chalk.gray("[APP]:") + chalk.red(`Discord Webhook Error`));
+                if (preferences.errorMessages) {
+                    return console.error(chalk.gray("[APP]:") + chalk.red(`Discord Webhook Error`));
+                } else {
+                    return;
+                }
             })
         })
     }
