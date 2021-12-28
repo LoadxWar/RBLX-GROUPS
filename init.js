@@ -46,7 +46,7 @@ const preferences = { // err config ⚙️
 if (preferences.logToFile.enabled) {
     var wStream = fs.createWriteStream(preferences.logToFile.fileName + ".txt")
 
-    wStream.write("Made by completelyfcked#0001\nGroups can be unable to load, the Roblox API does not show if it loads or not.\n")
+    wStream.write("Made by completelyfcked#0001\nGroups can be unable to load, the Roblox API does not show if it loads or not.\nMake sure to tab in and out because if you're viewing the file, you only see the one when you opened it.\n\n")
 }
 
 var stats = { groupsFound: 0, requestsMade: 0 }
@@ -151,7 +151,7 @@ function valid(data,) {
         wStream.write(`${data.name} - ${data.id}\n`)
     }
 
-    console.warn(chalk.gray("[APP]:") + chalk.bgGreenBright.blackBright(`${data.name} - ${data.id}`))
+    console.warn(chalk.gray("[APP]: ") + chalk.bgGreenBright.blackBright(`${data.name} - ${data.id}`))
     stats.groupsFound++; updateStats()
 
     if (!preferences.dWebhook == "") {
