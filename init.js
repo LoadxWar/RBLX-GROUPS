@@ -17,7 +17,7 @@ const preferences = { // err config ⚙️
         url: "",
     },
     int: { // group id
-        min: 3000000,
+        min: 5000000,
         max: 10000000,
     },
     interval: 5,
@@ -28,7 +28,7 @@ const preferences = { // err config ⚙️
      */
     logToFile: {
         enabled: true,
-        fileName: Date.now().toString() // exstension will be added automaticly 'fileName: "log"'
+        fileName: "log", // exstension will be added automaticly 'fileName: "log"'
     },
     repeat: true, // "true" for continues || "false" for 1 time
     proxy: true, // https://proxyscrape.com/free-proxy-list
