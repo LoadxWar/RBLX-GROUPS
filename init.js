@@ -153,7 +153,7 @@ if (fs.existsSync(process.cwd() + '/config.json')) {
                                             if (answer8.toLowerCase() == "true") {
                                                 preferences.proxy = true
 
-                                                console.log(chalk.grey("\nThe proxy file must look like this: ") + chalk.white("ip:port NEWLINE ip:port NEWLINE"))
+                                                console.log(chalk.grey("\nEach line of the proxy file must look like this: ") + chalk.yellowBright("ip:port"))
                                                 rl.question("Send the name of the file with the proxys inside. ! WITH EXSTENSION !\n", (proxyFile) => {
                                                     preferences.proxyFile = proxyFile
 
