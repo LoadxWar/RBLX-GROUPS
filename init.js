@@ -2,6 +2,9 @@ const axios = require("axios").default
 const fs = require("fs")
 const chalk = require('chalk')
 
+const readline = require("readline")
+const rl = readline.createInterface(process.stdin, process.stdout)
+
 console.clear()
 console.log(chalk.redBright("██████╗░██████╗░██╗░░░░░██╗░░██╗░░░░░░░██████╗░██████╗░░█████╗░██╗░░░██╗██████╗░░██████╗"))
 console.log(chalk.redBright("██╔══██╗██╔══██╗██║░░░░░╚██╗██╔╝░░░░░░██╔════╝░██╔══██╗██╔══██╗██║░░░██║██╔══██╗██╔════╝"))
@@ -12,10 +15,6 @@ console.log(chalk.redBright("╚═╝░░╚═╝╚═════╝░╚
 
 const preferences = { // err config ⚙️
     started: 0, // dont you dare change this 🔫
-    webhook: {
-        enabled: false,
-        url: "",
-    },
     int: { // group id
         min: 5000000,
         max: 8200000,
@@ -29,12 +28,12 @@ const preferences = { // err config ⚙️
      * 60000/(interval)
      */
     logToFile: {
-        enabled: true,
-        fileName: "log", // exstension will be added automaticly 'fileName: "log"'
+        enabled: false,
+        fileName: "", // exstension is required
     },
     repeat: true, // "true" for continues || "false" for 1 time
-    proxy: true, // https://proxyscrape.com/free-proxy-list
-    proxyFile: "http_proxies.txt", // exstension is required
+    proxy: false, // https://proxyscrape.com/free-proxy-list
+    proxyFile: "", // exstension is required
 
     // You can leave "dWebhook" empty.
     // Intro to webhooks : https://support.discord.com/hc/en-us/articles/228383668
@@ -44,8 +43,146 @@ const preferences = { // err config ⚙️
     dWebhook3: "",
 }
 
+if (fs.existsSync('config.json')) {
+    console.log(chalk.gray("[APP]: ") + chalk.green("config found") + chalk.white(" (config.json)"))
+    console.log(chalk.gray("[APP]: ") + chalk.yellow("assigning variables"))
+
+    var pref1 = require("./config.json")
+
+    preferences.int.min = pref1.int.min
+    preferences.int.max = pref1.int.max
+    preferences.interval = pref1.interval
+    preferences.startingRequestMessages = pref1.startingRequestMessages
+    preferences.errorMessages = pref1.errorMessages
+    preferences.logToFile.enabled = pref1.logToFile.enabled
+    preferences.logToFile.fileName = pref1.logToFile.fileName
+    preferences.repeat = pref1.repeat
+    preferences.proxy = pref1.proxy
+    preferences.proxyFile = pref1.proxyFile
+    preferences.dWebhook = pref1.dWebhook
+    preferences.dWebhook2 = pref1.dWebhook2
+    preferences.dWebhook3 = pref1.dWebhook3
+
+    console.log(chalk.gray("[APP]: ") + chalk.green("assigned variables\n"))
+
+    startMiner()
+} else {
+    console.log(chalk.gray("[APP]: ") + chalk.yellowBright("no config found & asking questions"))
+
+    rl.question("\nFrom which group id do you want to start? (Ex: 5000000)\n", (answer) => {
+        preferences.int.min = parseInt(answer, 10)
+
+        rl.question("\nTo which group id do you want to go? (Ex: 8200000)\n", (answer2) => {
+            preferences.int.max = parseInt(answer2, 10)
+
+            rl.question("\nHow many MILLISECONDS do you want to be between every request? (Ex: 100)\n", (answer3) => {
+                preferences.interval = parseInt(answer3, 10)
+
+                rl.question("\nDo you want to log request messages? (true/false)\n", (answer4) => {
+                    if (answer4.toLowerCase() == "true") {
+                        preferences.startingRequestMessages = true
+                    } else {
+                        preferences.startingRequestMessages = false
+                    }
+
+                    rl.question("\nDo you want to log error messages? (true/false)\n", (answer5) => {
+                        if (answer5.toLowerCase() == "true") {
+                            preferences.errorMessages = true
+                        } else {
+                            preferences.errorMessages = false
+                        }
+
+                        function done() {
+                            fs.writeFileSync("config.json", JSON.stringify(preferences))
+                            console.log(chalk.gray("[APP]: ") + chalk.greenBright("Setup Finished"))
+
+                            startMiner()
+                        }
+
+                        function afterProxy() {
+                            rl.question("\nDiscord Webhook 1 URL (Optional, leave blank for none)\n", (w1) => {
+                                if (w1.split(" ").join("") == "") {
+                                    preferences.dWebhook = ""
+
+                                    done()
+                                } else {
+                                    preferences.dWebhook = w1
+
+                                    rl.question("\nDiscord Webhook 2 URL (Optional, leave blank for none)\n", (w2) => {
+                                        if (w2.split(" ").join("") == "") {
+                                            preferences.dWebhook2 = ""
+        
+                                            done()
+                                        } else {
+                                            preferences.dWebhook2 = w2
+
+                                            rl.question("\nDiscord Webhook 3 URL (Optional, leave blank for none)\n", (w3) => {
+                                                if (w3.split(" ").join("") == "") {
+                                                    preferences.dWebhook3 = ""
+                
+                                                    done()
+                                                } else {
+                                                    preferences.dWebhook3 = w3
+                                                    
+                                                    done()
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
+                            })
+                        }
+
+                        function afterLog() {
+                            rl.question("\nDo you want to repeat? (true/false)\n", (answer7) => {
+                                if (answer7.toLowerCase() == "true") {
+                                    preferences.repeat = true
+                                } else {
+                                    preferences.repeat = false
+                                }
+
+                                rl.question("\nDo you want to use proxys? (true/false)\n", (answer8) => {
+                                    if (answer8.toLowerCase() == "true") {
+                                        preferences.proxy = true
+
+                                        rl.question("\nSend the name of the file with the proxys inside. ! WITH EXSTENSION !\n", (proxyFile) => {
+                                            preferences.proxyFile = proxyFile
+
+                                            afterProxy()
+                                        })
+                                    } else {
+                                        preferences.proxy = false
+
+                                        afterProxy()
+                                    }
+                                })
+                            })
+                        }
+
+                        rl.question("\nDo you want to log the groups to a file? (true/false)\n", (answer6) => {
+                            if (answer6.toLowerCase() == "true") {
+                                preferences.logToFile.enabled = true
+
+                                rl.question("\nWhere do you want to log the groups? (Ex: txt file) ! WITH EXSTENSION !\n", (logFile) => {
+                                    preferences.logToFile.fileName = logFile.toString()
+
+                                    afterLog()
+                                })
+                            } else {
+                                preferences.logToFile.enabled = false
+
+                                afterLog()
+                            }
+                        })
+                    })
+                })
+            })
+        })
+    })
+}
+
 if (preferences.logToFile.enabled) {
-    var wStream = fs.createWriteStream(preferences.logToFile.fileName + ".txt")
+    var wStream = fs.createWriteStream(preferences.logToFile.fileName)
 
     wStream.write("Made by completelyfcked#0001\nGroups can be unable to load, the Roblox API does not show if it loads or not.\nMake sure to tab in and out because if you're viewing the file, you only see the one when you opened it.\n\n")
 }
@@ -80,64 +217,66 @@ function newProxy() {
     currentProxy.port = proxy[1]
 }
 
-var currentint = preferences.int.min;
-var miner = setInterval(() => {
-    if (!preferences.started == 1) { console.log(chalk.gray("[APP]:") + chalk.greenBright(" Started")); preferences.started++; } // dont you dare change this 🔫
-    if (currentint > preferences.int.max) return end(); else { currentint++; };
+function startMiner() {
+    var currentint = preferences.int.min;
+    var miner = setInterval(() => {
+        if (!preferences.started == 1) { console.log(chalk.gray("[APP]:") + chalk.greenBright(" Started")); preferences.started++; } // dont you dare change this 🔫
+        if (currentint > preferences.int.max) return end(); else { currentint++; };
 
-    if (preferences.proxy) {
-        if (preferences.startingRequestMessages) {
-            console.log(chalk.gray("[APP]: ") + "starting request with proxy " + `${currentProxy.host}:${currentProxy.port}`)
-        }
+        if (preferences.proxy) {
+            if (preferences.startingRequestMessages) {
+                console.log(chalk.gray("[APP]: ") + "starting request with proxy " + `${currentProxy.host}:${currentProxy.port}`)
+            }
 
-        newProxy()
-    } else {
-        if (preferences.startingRequestMessages) {
-            console.log(chalk.gray("[APP]: ") + "starting request")
-        }
-    };
+            newProxy()
+        } else {
+            if (preferences.startingRequestMessages) {
+                console.log(chalk.gray("[APP]: ") + "starting request")
+            }
+        };
 
-    var conf = axiosConfig(currentProxy.host, currentProxy.port)
+        var conf = axiosConfig(currentProxy.host, currentProxy.port)
 
-    axios.get(`https://groups.roblox.com/v1/groups/${currentint}`, conf).then((res, req) => {
-        stats.requestsMade++; updateStats();
+        axios.get(`https://groups.roblox.com/v1/groups/${currentint}`, conf).then((res, req) => {
+            stats.requestsMade++; updateStats();
 
-        var data = res.data;
+            var data = res.data;
 
-        console.log(chalk.gray("[APP]: ") + chalk.blue(currentint))
+            console.log(chalk.gray("[APP]: ") + chalk.blue(currentint))
 
-        if (!data.owner) {
-            if (!data.isLocked) {
-                if (data.publicEntryAllowed) {
-                    valid(data)
+            if (!data.owner) {
+                if (!data.isLocked) {
+                    if (data.publicEntryAllowed) {
+                        valid(data)
+                    }
                 }
             }
-        }
-    }).catch((err) => {
-        if (err.response && preferences.errorMessages) {
-            var done = 0;
+        }).catch((err) => {
+            if (err.response && preferences.errorMessages) {
+                var done = 0;
 
-            if (err.response.status == 429) {
-                console.warn(chalk.gray("[APP]:") + chalk.red(" 429 (RATE LIMIT)"))
-                done++;
-            } else if (err.response.status == 502) {
-                console.log(chalk.gray("[APP]:") + chalk.red(" 502 (BAD GATEWAY)"))
-                done++;
-            } else if (err.response.status == 404) {
-                console.log(chalk.gray("[APP]:") + chalk.red(" 404 (NOT FOUND)"))
-                done++;
-            } else if (err.response.status == 503) {
-                console.error(chalk.gray("[APP]:") + chalk.red(" 503 (TOO MANY OPEN CONNECTIONS)"))
-                done++;
-            } else if (err.response.status == 403) {
-                console.log(chalk.gray("[APP]:") + chalk.red(" 403 (FORBIDDEN)"))
-                done++;
-            } else {
-                console.log(chalk.gray("[APP]: ") + chalk.red(err.response.status))
-            };
-        }
-    })
-}, preferences.interval)
+                if (err.response.status == 429) {
+                    console.warn(chalk.gray("[APP]:") + chalk.red(" 429 (RATE LIMIT)"))
+                    done++;
+                } else if (err.response.status == 502) {
+                    console.log(chalk.gray("[APP]:") + chalk.red(" 502 (BAD GATEWAY)"))
+                    done++;
+                } else if (err.response.status == 404) {
+                    console.log(chalk.gray("[APP]:") + chalk.red(" 404 (NOT FOUND)"))
+                    done++;
+                } else if (err.response.status == 503) {
+                    console.error(chalk.gray("[APP]:") + chalk.red(" 503 (TOO MANY OPEN CONNECTIONS)"))
+                    done++;
+                } else if (err.response.status == 403) {
+                    console.log(chalk.gray("[APP]:") + chalk.red(" 403 (FORBIDDEN)"))
+                    done++;
+                } else {
+                    console.log(chalk.gray("[APP]: ") + chalk.red(err.response.status))
+                };
+            }
+        })
+    }, preferences.interval)
+}
 
 function end() {
     if (preferences.repeat == false) {
