@@ -219,24 +219,41 @@ function axiosConfig(host, port) {
 function newProxy() {
     if (!preferences.proxy) return;
 
-    var proxies = fs.readFileSync(process.cwd() + "/" + preferences.proxyFile)
-    proxies = proxies.toString().split("\n")
+    var descriptor = fs.openSync(process.cwd() + "/" + preferences.proxyFile)
 
-    if (!proxies[currentProxy.index++]) {
-        currentProxy.index = 0;
-    }
-
-    var proxy = proxies[currentProxy.index++]
-    try {
-        proxy = proxy.toString().split(":")
-
-        currentProxy.host = proxy[0]
-        currentProxy.port = proxy[1]
-
-        fs.closeSync(process.cwd() + "/" + preferences.proxyFile)
-    } catch (err) {
-        console.error(chalk.gray("[APP]:") + chalk.red(" Error fetching Proxy"))  
-    }
+    fs.readFile(descriptor, (error, proxies_) => {
+        if (proxies_) {
+            proxies = proxies_.toString().split("\n")
+    
+            if (!proxies[currentProxy.index++]) {
+                currentProxy.index = 0;
+            }
+        
+            var proxy = proxies[currentProxy.index++]
+            try {
+                proxy = proxy.toString().split(":")
+        
+                currentProxy.host = proxy[0]
+                currentProxy.port = proxy[1]
+        
+                fs.close(descriptor, (err) => {
+                    if (err) {
+                        if (preferences.errorMessages) {
+                            console.error(chalk.gray("[APP]:") + chalk.red(" FS Failed to Close")) 
+                        }
+                    }
+                })
+            } catch (err) {
+                if (preferences.errorMessages == true) {
+                    console.error(chalk.gray("[APP]:") + chalk.red(" Error fetching Proxy"))  
+                }
+            }
+        } else if (error) {
+            if (preferences.errorMessages == true) {
+                console.error(chalk.gray("[APP]:") + chalk.red(" FS Read Error"))  
+            }
+        }
+    })
 }
 
 function startMiner() {
