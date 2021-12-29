@@ -6,6 +6,8 @@ const child_process = require("child_process")
 const readline = require("readline")
 const rl = readline.createInterface(process.stdin, process.stdout)
 
+process.title = "RBLX-GROUPS"
+
 console.clear()
 console.log(chalk.redBright("██████╗░██████╗░██╗░░░░░██╗░░██╗░░░░░░░██████╗░██████╗░░█████╗░██╗░░░██╗██████╗░░██████╗"))
 console.log(chalk.redBright("██╔══██╗██╔══██╗██║░░░░░╚██╗██╔╝░░░░░░██╔════╝░██╔══██╗██╔══██╗██║░░░██║██╔══██╗██╔════╝"))
@@ -234,8 +236,6 @@ function startMiner() {
         if (!preferences.started == 1) { console.log(chalk.gray("[APP]:") + chalk.greenBright(" Starting")); preferences.started = 1; } // dont you dare change this 🔫
         if (currentint > preferences.int.max) return end(miner); else { currentint++; };
 
-        updateStats();
-
         if (preferences.proxy) {
             if (preferences.startingRequestMessages) {
                 console.log(chalk.gray("[APP]: ") + "starting request with proxy " + `${currentProxy.host}:${currentProxy.port}`)
@@ -251,8 +251,6 @@ function startMiner() {
         var conf = axiosConfig(currentProxy.host, currentProxy.port)
 
         axios.get(`https://groups.roblox.com/v1/groups/${currentint}`, conf).then((res, req) => {
-            stats.requestsMade + 1;
-
             var data = res.data;
 
             console.log(chalk.gray("[APP]: ") + chalk.blue(currentint))
@@ -307,7 +305,6 @@ function valid(data, miner) {
     }
 
     console.warn(chalk.gray("[APP]: ") + chalk.bgGreenBright.blackBright(`${data.name} - ${data.id}`))
-    stats.groupsFound++;
 
     if (!preferences.dWebhook == "") {
         axios.post(preferences.dWebhook,
@@ -338,10 +335,6 @@ function valid(data, miner) {
             })
         })
     }
-}
-
-function updateStats() {
-    process.title = `RBLX-GROUPS | ${stats.requestsMade} Requests - ${stats.groupsFound} Groups`
 }
 
 function webhook(data) {
