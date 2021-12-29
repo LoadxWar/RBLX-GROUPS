@@ -10,11 +10,14 @@
 <!--<img src="https://cdn.discordapp.com/attachments/906456481589768192/925496524304187393/unknown.png">-->
 
 ## Installation
-#### Executable
+#### > Executable
 Install the executable for your OS, you can find it in the releases section.<br />Run the executable and set your preferences.<br /><br />If you want to change your preferences, open `config.json` and edit.<br />If you mess up you can delete `config.json` and run the executable again to set your preferences.
 
-#### Source Code
+#### > Source Code
 Install the source code out of the latest release.<br />Make sure you have NodeJS installed.<br />Run `npm i` to install the dependencies.<br />To start the software run `node .` and enjoy!
+
+#### > Installing on [Repl It](https://replit.com)
+You can also run this on [replit.com](https://replit.com) which runs very fast without sending all those requests from your device.<br />I am giving support for running this on those sites, like [replit.com](https://replit.com)
 
 ## Build
 Install [`pkg`](https://www.npmjs.com/package/pkg) publicly via **NPM**<br />
