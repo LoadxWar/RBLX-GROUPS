@@ -232,6 +232,8 @@ function newProxy() {
 
         currentProxy.host = proxy[0]
         currentProxy.port = proxy[1]
+
+        fs.closeSync(process.cwd() + "/" + preferences.proxyFile)
     } catch (err) {
         console.error(chalk.gray("[APP]:") + chalk.red(" Error fetching Proxy"))  
     }
