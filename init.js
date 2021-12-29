@@ -17,10 +17,10 @@ const preferences = { // err config ⚙️
         url: "",
     },
     int: { // group id
-        min: 0,
-        max: 10000000,
+        min: 5000000,
+        max: 8200000,
     },
-    interval: 3,
+    interval: 100,
     startingRequestMessages: false,
     errorMessages: false,
     /**
@@ -40,7 +40,8 @@ const preferences = { // err config ⚙️
     // Intro to webhooks : https://support.discord.com/hc/en-us/articles/228383668
     // dWebhook2 Optional, only required if you're having interval on very low (near 1)
     dWebhook: "",
-    dWebhook2: ""
+    dWebhook2: "",
+    dWebhook3: "",
 }
 
 if (preferences.logToFile.enabled) {
@@ -107,7 +108,9 @@ var miner = setInterval(() => {
 
         if (!data.owner) {
             if (!data.isLocked) {
-                valid(data)
+                if (data.publicEntryAllowed) {
+                    valid(data)
+                }
             }
         }
     }).catch((err) => {
@@ -165,10 +168,20 @@ function valid(data,) {
             axios.post(preferences.dWebhook2,
                 webhook(data)
             ).catch((err) => {
-                if (preferences.errorMessages) {
-                    return console.error(chalk.gray("[APP]:") + chalk.red(`Discord Webhook Error`));
+                if (preferences.dWebhook2) {
+                    axios.post(preferences.dWebhook3, webhook(data)).catch((err) => {
+                        if (preferences.errorMessages) {
+                            return console.error(chalk.gray("[APP]:") + chalk.red(`Discord Webhook Error`));
+                        } else {
+                            return;
+                        } 
+                    })
                 } else {
-                    return;
+                    if (preferences.errorMessages) {
+                        return console.error(chalk.gray("[APP]:") + chalk.red(`Discord Webhook Error`));
+                    } else {
+                        return;
+                    }
                 }
             })
         })
