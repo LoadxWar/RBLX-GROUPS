@@ -1,6 +1,6 @@
 {
   "name": "rblx-groups",
-  "version": "0.0.1-dev",
+  "version": "1.0.0",
   "description": "A Roblox Group Finder",
   "main": "init.js",
   "scripts": {
