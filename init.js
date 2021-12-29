@@ -253,7 +253,7 @@ function startMiner() {
         axios.get(`https://groups.roblox.com/v1/groups/${currentint}`, conf).then((res, req) => {
             var data = res.data;
 
-            console.log(chalk.gray("[APP]: ") + chalk.blue(currentint))
+            console.log(chalk.gray("[APP]: ") + chalk.blueBright(currentint))
 
             currentint++;
 
