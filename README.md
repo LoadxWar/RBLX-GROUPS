@@ -1,8 +1,8 @@
 # RBLX-GROUPS
 A Roblox Group Finder
 
-<img src="https://cdn.discordapp.com/attachments/906456481589768192/925496315352342628/unknown.png">
-<img src="https://cdn.discordapp.com/attachments/906456481589768192/925496524304187393/unknown.png">
+<img src="https://cdn.discordapp.com/attachments/925709542778617916/925720819739541514/unknown.png">
+<!--<img src="https://cdn.discordapp.com/attachments/906456481589768192/925496524304187393/unknown.png">-->
 
 ## Installation
 1. Install NodeJs if you haven't.
