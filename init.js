@@ -234,6 +234,8 @@ function startMiner() {
         if (!preferences.started == 1) { console.log(chalk.gray("[APP]:") + chalk.greenBright(" Starting")); preferences.started = 1; } // dont you dare change this 🔫
         if (currentint > preferences.int.max) return end(miner); else { currentint++; };
 
+        updateStats();
+
         if (preferences.proxy) {
             if (preferences.startingRequestMessages) {
                 console.log(chalk.gray("[APP]: ") + "starting request with proxy " + `${currentProxy.host}:${currentProxy.port}`)
@@ -249,7 +251,7 @@ function startMiner() {
         var conf = axiosConfig(currentProxy.host, currentProxy.port)
 
         axios.get(`https://groups.roblox.com/v1/groups/${currentint}`, conf).then((res, req) => {
-            stats.requestsMade++; updateStats();
+            stats.requestsMade + 1;
 
             var data = res.data;
 
@@ -305,7 +307,7 @@ function valid(data, miner) {
     }
 
     console.warn(chalk.gray("[APP]: ") + chalk.bgGreenBright.blackBright(`${data.name} - ${data.id}`))
-    stats.groupsFound++; updateStats()
+    stats.groupsFound++;
 
     if (!preferences.dWebhook == "") {
         axios.post(preferences.dWebhook,
