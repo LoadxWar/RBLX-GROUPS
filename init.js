@@ -44,6 +44,7 @@ const preferences = { // err config ⚙️
 }
 
 if (fs.existsSync('config.json')) {
+    console.log(chalk.gray("[APP]: ") + chalk.blueBright("Join the Discord - https://discord.gg/CT6HxZewz6"))
     console.log(chalk.gray("[APP]: ") + chalk.green("config found") + chalk.white(" (config.json)"))
     console.log(chalk.gray("[APP]: ") + chalk.yellow("assigning variables"))
 
