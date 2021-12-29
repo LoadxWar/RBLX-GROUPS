@@ -21,7 +21,7 @@ Install [`pkg`](https://www.npmjs.com/package/pkg) publicly via **NPM**<br />
 Run `pkg init.js` inside the folder of `init.js`
 
 ## Using proxy
-<strong>I recommend https://proxyscrape.com/free-proxy-list (Use HTTP)</strong>
+<strong>I recommend https://proxyscrape.com/free-proxy-list or https://openproxy.space/list (Use HTTP)</strong>
 1. Add your txt to the folder
 2. Go into `init.js` and change `proxyFile` to the file name of your txt, that's without the `.txt`.
 3. Make sure that `proxy` is set to `true` in `init.js`
