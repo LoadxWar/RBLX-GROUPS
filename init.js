@@ -72,7 +72,7 @@ if (fs.existsSync(process.cwd() + '/config.json')) {
     startMiner()
 } else {
     console.log(chalk.gray("[APP]: ") + chalk.yellowBright("no config found & asking questions"))
-    rl.question("Do you want to use the default settings? (true/false)", (defaultOrNot) => {
+    rl.question("Do you want to use the default settings? (true/false)\n", (defaultOrNot) => {
         if (defaultOrNot.toLowerCase() == "true") {
             console.log(chalk.gray("[APP]: ") + chalk.yellowBright("chose default preferences\n"))
             startMiner()   
