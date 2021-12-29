@@ -216,33 +216,45 @@ function axiosConfig(host, port) {
         }
     };
 }
-function newProxy() {
-    if (!preferences.proxy) return;
 
-    fs.readFile(process.cwd() + "/" + preferences.proxyFile, (err, proxies_) => {
+if (preferences.proxy) {
+    var proxies
+
+    fs.readFile(process.cwd() + "/" + preferences.proxyFile, (err, data) => {
         if (err && preferences.errorMessages) {
-            console.error(chalk.gray("[APP]:") + chalk.red(" FS Error L222") + chalk.blueBright("!"))
-        }
-
-        var proxies = proxies_.toString().split("\n")
-        
-        if (!proxies[currentProxy.index++]) {
-            currentProxy.index = 0;
-        }
-            
-        var proxy = proxies[currentProxy.index++]
-        try {
-            proxy = proxy.toString().split(":")
-            
-            currentProxy.host = proxy[0]
-            currentProxy.port = proxy[1]
-        } catch (err) {
-            if (preferences.errorMessages == true) {
-                console.error(chalk.gray("[APP]:") + chalk.red(" Error fetching Proxy"))
-            }
+            console.error(chalk.gray("[APP]:") + chalk.red(" FS Error 223") + chalk.blueBright("!"))
+        } else {
+            proxies = data
         }
     })
 }
+
+function newProxy() {
+    if (!preferences.proxy) return;
+
+    if (err && preferences.errorMessages) {
+        console.error(chalk.gray("[APP]:") + chalk.red(" FS Error") + chalk.blueBright("!"))
+    }
+
+    var proxies = proxies_.toString().split("\n")
+        
+    if (!proxies[currentProxy.index++]) {
+        currentProxy.index = 0;
+    }
+            
+    var proxy = proxies[currentProxy.index++]
+    try {
+        proxy = proxy.toString().split(":")
+            
+        currentProxy.host = proxy[0]
+        currentProxy.port = proxy[1]
+    } catch (err) {
+        if (preferences.errorMessages == true) {
+            console.error(chalk.gray("[APP]:") + chalk.red(" Error fetching Proxy"))
+        }
+    }
+}
+
 
 function startMiner() {
     var currentint = preferences.int.min;
@@ -354,44 +366,44 @@ function valid(data, miner) {
     }
 }
 
-function webhook(data) {
-    return {
-        "content": null,
-        "embeds": [
-            {
-                "title": "Group Found",
-                "description": "The groups have a high chance of not loading because they are too outdated.\nMake sure to check `" + preferences.logToFile.fileName + ".txt` for the more accurate results since Discord doesn't like so many post requests to a webhook.",
-                "url": "https://www.roblox.com/groups/" + data.id,
-                "color": 1638178,
-                "fields": [
-                    {
-                        "name": "Name",
-                        "value": data.name,
-                        "inline": true
+    function webhook(data) {
+        return {
+            "content": null,
+            "embeds": [
+                {
+                    "title": "Group Found",
+                    "description": "The groups have a high chance of not loading because they are too outdated.\nMake sure to check `" + preferences.logToFile.fileName + ".txt` for the more accurate results since Discord doesn't like so many post requests to a webhook.",
+                    "url": "https://www.roblox.com/groups/" + data.id,
+                    "color": 1638178,
+                    "fields": [
+                        {
+                            "name": "Name",
+                            "value": data.name,
+                            "inline": true
+                        },
+                        {
+                            "name": "Members",
+                            "inline": true,
+                            "value": data.memberCount
+                        },
+                        {
+                            "name": "Id",
+                            "inline": true,
+                            "value": data.id
+                        }
+                    ],
+                    "author": {
+                        "name": "completelyfcked#0001",
+                        "url": "https://discord.com/users/449250687868469258",
+                        "icon_url": "https://cdn.discordapp.com/attachments/906456481589768192/925122166540869692/completelyf_trans.png"
                     },
-                    {
-                        "name": "Members",
-                        "inline": true,
-                        "value": data.memberCount
+                    "thumbnail": {
+                        "url": "https://external-preview.redd.it/9HZBYcvaOEnh4tOp5EqgcCr_vKH7cjFJwkvw-45Dfjs.png?auto=webp&s=ade9b43592942905a45d04dbc5065badb5aa3483"
                     },
-                    {
-                        "name": "Id",
-                        "inline": true,
-                        "value": data.id
+                    "footer": {
+                        "text": "Thumbnail is currently not supported."
                     }
-                ],
-                "author": {
-                    "name": "completelyfcked#0001",
-                    "url": "https://discord.com/users/449250687868469258",
-                    "icon_url": "https://cdn.discordapp.com/attachments/906456481589768192/925122166540869692/completelyf_trans.png"
-                },
-                "thumbnail": {
-                    "url": "https://external-preview.redd.it/9HZBYcvaOEnh4tOp5EqgcCr_vKH7cjFJwkvw-45Dfjs.png?auto=webp&s=ade9b43592942905a45d04dbc5065badb5aa3483"
-                },
-                "footer": {
-                    "text": "Thumbnail is currently not supported."
                 }
-            }
-        ]
+            ]
+        }
     }
-}
