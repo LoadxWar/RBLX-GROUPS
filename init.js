@@ -217,13 +217,13 @@ function axiosConfig(host, port) {
     };
 }
 
-var proxies_
+var proxies_ = ""
 if (preferences.proxy) {
     fs.readFile(process.cwd() + "/" + preferences.proxyFile, (err, data) => {
         if (err && preferences.errorMessages) {
             console.error(chalk.gray("[APP]:") + chalk.red(" FS Error 223") + chalk.blueBright("!"))
         } else {
-            proxies_ = data
+            proxies_ = data.toString()
         }
     })
 }
@@ -231,7 +231,7 @@ if (preferences.proxy) {
 function newProxy() {
     if (!preferences.proxy) return;
 
-    var proxies = proxies_.toString().split("\n")
+    var proxies = proxies_.split("\n")
     if (!proxies[currentProxy.index++]) {
         currentProxy.index = 0;
     }
