@@ -218,7 +218,7 @@ function axiosConfig(host, port) {
 }
 
 if (preferences.proxy) {
-    var proxies
+    var proxies_
 
     fs.readFile(process.cwd() + "/" + preferences.proxyFile, (err, data) => {
         if (err && preferences.errorMessages) {
