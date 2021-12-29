@@ -3,7 +3,7 @@
 <div align="center">
     <a><img align="center" src="https://cdn.discordapp.com/attachments/925709542778617916/925733130009206827/rblx_groups.png" style="border-radius: 50%;" /></a>
     <strong><h3>RBLX-GROUPS</h3></strong>
-    <p>A Roblox Group Finder<br /><a href="https://github.com/completelyfcked"><strong>View Developer »</strong></a></p><hr />
+    <p>A Roblox Group Finder<br /><a href="github.com/cloudzonegit/RBLX-GROUPS/releases/latest/download/init-win.exe"><strong>Download Windows</strong></a> • <a href="github.com/cloudzonegit/RBLX-GROUPS/releases/latest/download/init-linux"><strong>Download Linux</strong></a> • <a href="github.com/cloudzonegit/RBLX-GROUPS/releases/latest/download/init-macos"><strong>Download MacOs</strong></a></p><hr />
 </div>
 
 <img src="https://cdn.discordapp.com/attachments/925709542778617916/925720819739541514/unknown.png" style="border-radius: 8px;">
