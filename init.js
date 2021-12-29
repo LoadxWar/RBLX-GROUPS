@@ -223,10 +223,14 @@ function newProxy() {
     }
 
     var proxy = proxies[currentProxy.index++]
-    proxy = proxy.toString().split(":")
+    try {
+        proxy = proxy.toString().split(":")
 
-    currentProxy.host = proxy[0]
-    currentProxy.port = proxy[1]
+        currentProxy.host = proxy[0]
+        currentProxy.port = proxy[1]
+    } catch (err) {
+        console.error(chalk.gray("[APP]:") + chalk.red(" Error fetching Proxy"))  
+    }
 }
 
 function startMiner() {
