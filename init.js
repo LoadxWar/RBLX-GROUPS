@@ -217,14 +217,13 @@ function axiosConfig(host, port) {
     };
 }
 
+var proxies_
 if (preferences.proxy) {
-    var proxies_
-
     fs.readFile(process.cwd() + "/" + preferences.proxyFile, (err, data) => {
         if (err && preferences.errorMessages) {
             console.error(chalk.gray("[APP]:") + chalk.red(" FS Error 223") + chalk.blueBright("!"))
         } else {
-            proxies = data
+            proxies_ = data
         }
     })
 }
