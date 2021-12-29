@@ -257,9 +257,9 @@ function startMiner() {
 
             currentint++;
 
-            if (!data.owner) {
-                if (!data.isLocked) {
-                    if (data.publicEntryAllowed) {
+            if (data.owner.username == "") {
+                if (!data.isLocked || data.isLocked == false) {
+                    if (data.publicEntryAllowed == true) {
                         valid(data, miner)
                     }
                 }
