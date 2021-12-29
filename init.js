@@ -219,39 +219,30 @@ function axiosConfig(host, port) {
 function newProxy() {
     if (!preferences.proxy) return;
 
-    var descriptor = fs.openSync(process.cwd() + "/" + preferences.proxyFile)
+    var readStream = fs.createReadStream(process.cwd() + "/" + preferences.proxyFile)
+
+    var proxies = readStream.read()
+    proxies = proxies.toString().split("\n")
     
-    fs.readFile(descriptor, (error, proxies_) => {
-        if (proxies_) {
-            proxies = proxies_.toString().split("\n")
-    
-            if (!proxies[currentProxy.index++]) {
-                currentProxy.index = 0;
-            }
+    if (!proxies[currentProxy.index++]) {
+        currentProxy.index = 0;
+    }
         
-            var proxy = proxies[currentProxy.index++]
-            try {
-                proxy = proxy.toString().split(":")
+    var proxy = proxies[currentProxy.index++]
+    try {
+        proxy = proxy.toString().split(":")
         
-                currentProxy.host = proxy[0]
-                currentProxy.port = proxy[1]
-        
-                fs.close(descriptor, (err) => {
-                    if (preferences.errorMessages == true) {
-                        console.error(chalk.gray("[APP]:") + chalk.red(" FS Error L239 " + chalk.blueBright("!")))  
-                    } 
-                })
-            } catch (err) {
-                if (preferences.errorMessages == true) {
-                    console.error(chalk.gray("[APP]:") + chalk.red(" Error fetching Proxy"))  
-                }
-            }
-        } else if (error) {
-            if (preferences.errorMessages == true) {
-                console.error(chalk.gray("[APP]:") + chalk.red(" FS Error L224") + chalk.blueBright("!"))  
-            }
+        currentProxy.host = proxy[0]
+        currentProxy.port = proxy[1]
+    } catch (err) {
+        if (preferences.errorMessages == true) {
+            console.error(chalk.gray("[APP]:") + chalk.red(" Error fetching Proxy"))
         }
-    })
+    }
+        
+    if (preferences.errorMessages == true) {
+        console.error(chalk.gray("[APP]:") + chalk.red(" FS Error L224") + chalk.blueBright("!"))
+    }
 }
 
 function startMiner() {
