@@ -18,7 +18,7 @@ A Roblox Group Finder
 6. Enjoy!
 
 ## Build
-Install `pkg` publicly via **NPM**<br />
+Install [`pkg`](https://www.npmjs.com/package/pkg) publicly via **NPM**<br />
 Run `pkg init.js` inside the folder of `init.js`
 
 ## Using proxy
