@@ -266,6 +266,7 @@ function startMiner() {
             if (err.response && preferences.errorMessages) {
                 var done = 0;
 
+                currentint - 1;
                 if (err.response.status == 429) {
                     console.warn(chalk.gray("[APP]:") + chalk.red(" 429 (RATE LIMIT)"))
                     done++;
