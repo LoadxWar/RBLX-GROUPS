@@ -10,15 +10,11 @@
 <!--<img src="https://cdn.discordapp.com/attachments/906456481589768192/925496524304187393/unknown.png">-->
 
 ## Installation
-<details>
-<summary><strong>Executable</strong></summary>
-<p>Install the executable for your OS, you can find it in the releases section.<br />Run the executable and set your preferences.<br /><br />If you want to change your preferences, open `config.json` and edit.<br />If you mess up you can delete `config.json` and run the executable again to set your preferences.</p>
-</details>
+#### Executable
+Install the executable for your OS, you can find it in the releases section.<br />Run the executable and set your preferences.<br /><br />If you want to change your preferences, open `config.json` and edit.<br />If you mess up you can delete `config.json` and run the executable again to set your preferences.
 
-<details>
-<summary><strong>Source Code</strong></summary>
-<p>Install the source code out of the latest release.<br />Make sure you have NodeJS installed.<br />Run `npm i` to install the dependencies.<br />To start the software run `node .` and enjoy!</p>
-</details>
+#### Source Code
+Install the source code out of the latest release.<br />Make sure you have NodeJS installed.<br />Run `npm i` to install the dependencies.<br />To start the software run `node .` and enjoy!
 
 ## Build
 Install [`pkg`](https://www.npmjs.com/package/pkg) publicly via **NPM**<br />
