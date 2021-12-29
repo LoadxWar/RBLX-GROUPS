@@ -220,7 +220,7 @@ function newProxy() {
     if (!preferences.proxy) return;
 
     var descriptor = fs.openSync(process.cwd() + "/" + preferences.proxyFile)
-
+    
     fs.readFile(descriptor, (error, proxies_) => {
         if (proxies_) {
             proxies = proxies_.toString().split("\n")
@@ -236,13 +236,7 @@ function newProxy() {
                 currentProxy.host = proxy[0]
                 currentProxy.port = proxy[1]
         
-                fs.close(descriptor, (err) => {
-                    if (err) {
-                        if (preferences.errorMessages) {
-                            console.error(chalk.gray("[APP]:") + chalk.red(" FS Failed to Close")) 
-                        }
-                    }
-                })
+                fs.closeSync(descriptor)
             } catch (err) {
                 if (preferences.errorMessages == true) {
                     console.error(chalk.gray("[APP]:") + chalk.red(" Error fetching Proxy"))  
@@ -250,7 +244,7 @@ function newProxy() {
             }
         } else if (error) {
             if (preferences.errorMessages == true) {
-                console.error(chalk.gray("[APP]:") + chalk.red(" FS Read Error"))  
+                console.error(chalk.gray("[APP]:") + chalk.red(" FS Error L224"))  
             }
         }
     })
