@@ -17,7 +17,7 @@
 
 <details>
 <summary><strong>Source Code</strong></summary>
-<p></p>
+<p>Install the source code out of the latest release.<br />Make sure you have NodeJS installed.<br />Run `npm i` to install the dependencies.<br />To start the software run `node .` and enjoy!</p>
 </details>
 
 ## Build
