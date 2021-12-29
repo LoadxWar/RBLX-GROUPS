@@ -301,7 +301,7 @@ function valid(data,) {
             webhook(data)
         ).catch((err) => {
             if (!preferences.dWebhook2 && preferences.errorMessages) {
-                return console.error(chalk.gray("[APP]:") + chalk.red(`Discord Webhook Error`));
+                return console.error(chalk.gray("[APP]:") + chalk.red(` Discord Webhook Error`));
             };
 
             axios.post(preferences.dWebhook2,
@@ -310,14 +310,14 @@ function valid(data,) {
                 if (preferences.dWebhook2) {
                     axios.post(preferences.dWebhook3, webhook(data)).catch((err) => {
                         if (preferences.errorMessages) {
-                            return console.error(chalk.gray("[APP]:") + chalk.red(`Discord Webhook Error`));
+                            return console.error(chalk.gray("[APP]:") + chalk.red(` Discord Webhook Error`));
                         } else {
                             return;
                         } 
                     })
                 } else {
                     if (preferences.errorMessages) {
-                        return console.error(chalk.gray("[APP]:") + chalk.red(`Discord Webhook Error`));
+                        return console.error(chalk.gray("[APP]:") + chalk.red(` Discord Webhook Error`));
                     } else {
                         return;
                     }
