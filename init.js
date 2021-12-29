@@ -234,7 +234,7 @@ function startMiner() {
 
     var miner = setInterval(() => {
         if (!preferences.started == 1) { console.log(chalk.gray("[APP]:") + chalk.greenBright(" Starting")); preferences.started = 1; } // dont you dare change this 🔫
-        if (currentint > preferences.int.max) return end(miner); else { currentint++; };
+        if (currentint > preferences.int.max) return end(miner);
 
         if (preferences.proxy) {
             if (preferences.startingRequestMessages) {
@@ -255,6 +255,8 @@ function startMiner() {
 
             console.log(chalk.gray("[APP]: ") + chalk.blue(currentint))
 
+            currentint++;
+
             if (!data.owner) {
                 if (!data.isLocked) {
                     if (data.publicEntryAllowed) {
@@ -266,7 +268,6 @@ function startMiner() {
             if (err.response && preferences.errorMessages) {
                 var done = 0;
 
-                currentint--;
                 if (err.response.status == 429) {
                     console.warn(chalk.gray("[APP]:") + chalk.red(" 429 (RATE LIMIT)"))
                     done++;
