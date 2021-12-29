@@ -9,17 +9,17 @@ A Roblox Group Finder
 2. Open it and follow the instructions to change the preferences to what you want.
 3. Once you have finished, enjoy!
 
-## Build
-Install `pkg` publicly via **NPM**<br />
-Run `pkg init.js` inside the folder of `init.js`
-
-## Installation ALL OTHER OS
+## Installation
 1. Install the source code
 2. Make sure you have NodeJS installed
 3. Run `npm i` inside the console of the folder to install the dependencies.
 4. Run `node .` to start.
 5. Follow the instructions to change the preferences to what you want.
 6. Enjoy!
+
+## Build
+Install `pkg` publicly via **NPM**<br />
+Run `pkg init.js` inside the folder of `init.js`
 
 ## Using proxy
 <strong>I recommend https://proxyscrape.com/free-proxy-list (Use HTTP)</strong>
