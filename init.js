@@ -1,6 +1,7 @@
 const axios = require("axios").default
 const fs = require("fs")
 const chalk = require('chalk')
+const child_process = require("child_process")
 
 const readline = require("readline")
 const rl = readline.createInterface(process.stdin, process.stdout)
@@ -19,9 +20,9 @@ const preferences = { // err config ⚙️
         min: 5000000,
         max: 8200000,
     },
-    interval: 100,
-    startingRequestMessages: false,
-    errorMessages: false,
+    interval: 1000,
+    startingRequestMessages: true,
+    errorMessages: true,
     /**
      * Over 600 requests per minute if "interval" is below 100.
      * 
@@ -44,12 +45,12 @@ const preferences = { // err config ⚙️
 }
 
 if (fs.existsSync('config.json')) {
-    console.log(chalk.gray("[APP]: ") + chalk.blueBright("Join the Discord - https://discord.gg/CT6HxZewz6"))
+    console.log(chalk.gray("[APP]: ") + chalk.blue("Join the Discord - https://discord.gg/CT6HxZewz6"))
     console.log(chalk.gray("[APP]: ") + chalk.green("config found") + chalk.white(" (config.json)"))
-    console.log(chalk.gray("[APP]: ") + chalk.yellow("assigning variables"))
+    
+    var pref1 = require(process.cwd() + "/config.json")
 
-    var pref1 = require("./config.json")
-
+    console.log(chalk.gray("[APP]: ") + chalk.yellowBright("assigning variables"))
     preferences.int.min = pref1.int.min
     preferences.int.max = pref1.int.max
     preferences.interval = pref1.interval
@@ -69,120 +70,128 @@ if (fs.existsSync('config.json')) {
     startMiner()
 } else {
     console.log(chalk.gray("[APP]: ") + chalk.yellowBright("no config found & asking questions"))
+    rl.question("Do you want to use the default settings? (true/false)", (defaultOrNot) => {
+        if (defaultOrNot.toLowerCase() == "true") {
+            console.log(chalk.gray("[APP]: ") + chalk.yellowBright("chose default preferences\n"))
+            startMiner()   
+        } else {
+            rl.question("\nFrom which group id do you want to start? (Ex: 5000000)\n", (answer) => {
+                preferences.int.min = parseInt(answer, 10)
 
-    rl.question("\nFrom which group id do you want to start? (Ex: 5000000)\n", (answer) => {
-        preferences.int.min = parseInt(answer, 10)
+                rl.question("\nTo which group id do you want to go? (Ex: 8200000)\n", (answer2) => {
+                    preferences.int.max = parseInt(answer2, 10)
 
-        rl.question("\nTo which group id do you want to go? (Ex: 8200000)\n", (answer2) => {
-            preferences.int.max = parseInt(answer2, 10)
+                    rl.question("\nHow many MILLISECONDS do you want to be between every request? (Ex: 100)\n", (answer3) => {
+                        preferences.interval = parseInt(answer3, 10)
 
-            rl.question("\nHow many MILLISECONDS do you want to be between every request? (Ex: 100)\n", (answer3) => {
-                preferences.interval = parseInt(answer3, 10)
+                        rl.question("\nDo you want to log request messages? (true/false)\n", (answer4) => {
+                            if (answer4.toLowerCase() == "true") {
+                                preferences.startingRequestMessages = true
+                            } else {
+                                preferences.startingRequestMessages = false
+                            }
 
-                rl.question("\nDo you want to log request messages? (true/false)\n", (answer4) => {
-                    if (answer4.toLowerCase() == "true") {
-                        preferences.startingRequestMessages = true
-                    } else {
-                        preferences.startingRequestMessages = false
-                    }
-
-                    rl.question("\nDo you want to log error messages? (true/false)\n", (answer5) => {
-                        if (answer5.toLowerCase() == "true") {
-                            preferences.errorMessages = true
-                        } else {
-                            preferences.errorMessages = false
-                        }
-
-                        function done() {
-                            fs.writeFileSync("config.json", JSON.stringify(preferences))
-                            console.log(chalk.gray("[APP]: ") + chalk.greenBright("Setup Finished"))
-
-                            startMiner()
-                        }
-
-                        function afterProxy() {
-                            rl.question("\nDiscord Webhook 1 URL (Optional, leave blank for none)\n", (w1) => {
-                                if (w1.split(" ").join("") == "") {
-                                    preferences.dWebhook = ""
-
-                                    done()
+                            rl.question("\nDo you want to log error messages? (true/false)\n", (answer5) => {
+                                if (answer5.toLowerCase() == "true") {
+                                    preferences.errorMessages = true
                                 } else {
-                                    preferences.dWebhook = w1
+                                    preferences.errorMessages = false
+                                }
 
-                                    rl.question("\nDiscord Webhook 2 URL (Optional, leave blank for none)\n", (w2) => {
-                                        if (w2.split(" ").join("") == "") {
-                                            preferences.dWebhook2 = ""
-        
+                                function done() {
+                                    fs.writeFileSync("config.json", JSON.stringify(preferences))
+                                    console.log(chalk.gray("[APP]: ") + chalk.greenBright("Setup Finished"))
+
+                                    startMiner()
+                                }
+
+                                function afterProxy() {
+                                    rl.question("\nDiscord Webhook 1 URL (Optional, leave blank for none)\n", (w1) => {
+                                        if (w1.split(" ").join("") == "") {
+                                            preferences.dWebhook = ""
+
                                             done()
                                         } else {
-                                            preferences.dWebhook2 = w2
+                                            preferences.dWebhook = w1
 
-                                            rl.question("\nDiscord Webhook 3 URL (Optional, leave blank for none)\n", (w3) => {
-                                                if (w3.split(" ").join("") == "") {
-                                                    preferences.dWebhook3 = ""
-                
+                                            rl.question("\nDiscord Webhook 2 URL (Optional, leave blank for none)\n", (w2) => {
+                                                if (w2.split(" ").join("") == "") {
+                                                    preferences.dWebhook2 = ""
+        
                                                     done()
                                                 } else {
-                                                    preferences.dWebhook3 = w3
+                                                    preferences.dWebhook2 = w2
+
+                                                    rl.question("\nDiscord Webhook 3 URL (Optional, leave blank for none)\n", (w3) => {
+                                                        if (w3.split(" ").join("") == "") {
+                                                            preferences.dWebhook3 = ""
+                
+                                                            done()
+                                                        } else {
+                                                            preferences.dWebhook3 = w3
                                                     
-                                                    done()
+                                                            done()
+                                                        }
+                                                    })
                                                 }
                                             })
                                         }
                                     })
                                 }
-                            })
-                        }
 
-                        function afterLog() {
-                            rl.question("\nDo you want to repeat? (true/false)\n", (answer7) => {
-                                if (answer7.toLowerCase() == "true") {
-                                    preferences.repeat = true
-                                } else {
-                                    preferences.repeat = false
+                                function afterLog() {
+                                    rl.question("\nDo you want to repeat? (true/false)\n", (answer7) => {
+                                        if (answer7.toLowerCase() == "true") {
+                                            preferences.repeat = true
+                                        } else {
+                                            preferences.repeat = false
+                                        }
+
+                                        rl.question("\nDo you want to use proxys? (true/false)\n", (answer8) => {
+                                            if (answer8.toLowerCase() == "true") {
+                                                preferences.proxy = true
+
+                                                console.log(chalk.grey("\nThe proxy file must look like this: ") + chalk.white("ip:port NEWLINE ip:port NEWLINE"))
+                                                rl.question("Send the name of the file with the proxys inside. ! WITH EXSTENSION !\n", (proxyFile) => {
+                                                    preferences.proxyFile = proxyFile
+
+                                                    afterProxy()
+                                                })
+                                            } else {
+                                                preferences.proxy = false
+
+                                                afterProxy()
+                                            }
+                                        })
+                                    })
                                 }
 
-                                rl.question("\nDo you want to use proxys? (true/false)\n", (answer8) => {
-                                    if (answer8.toLowerCase() == "true") {
-                                        preferences.proxy = true
+                                rl.question("\nDo you want to log the groups to a file? (true/false)\n", (answer6) => {
+                                    if (answer6.toLowerCase() == "true") {
+                                        preferences.logToFile.enabled = true
 
-                                        rl.question("\nSend the name of the file with the proxys inside. ! WITH EXSTENSION !\n", (proxyFile) => {
-                                            preferences.proxyFile = proxyFile
+                                        rl.question("\nWhere do you want to log the groups? (Ex: txt file) ! WITH EXSTENSION !\n", (logFile) => {
+                                            preferences.logToFile.fileName = logFile.toString()
 
-                                            afterProxy()
+                                            afterLog()
                                         })
                                     } else {
-                                        preferences.proxy = false
+                                        preferences.logToFile.enabled = false
 
-                                        afterProxy()
+                                        afterLog()
                                     }
                                 })
                             })
-                        }
-
-                        rl.question("\nDo you want to log the groups to a file? (true/false)\n", (answer6) => {
-                            if (answer6.toLowerCase() == "true") {
-                                preferences.logToFile.enabled = true
-
-                                rl.question("\nWhere do you want to log the groups? (Ex: txt file) ! WITH EXSTENSION !\n", (logFile) => {
-                                    preferences.logToFile.fileName = logFile.toString()
-
-                                    afterLog()
-                                })
-                            } else {
-                                preferences.logToFile.enabled = false
-
-                                afterLog()
-                            }
                         })
                     })
                 })
+                
             })
-        })
+        }
     })
 }
 
-if (preferences.logToFile.enabled) {
+if (preferences.logToFile.enabled == true) {
     var wStream = fs.createWriteStream(preferences.logToFile.fileName)
 
     wStream.write("Made by completelyfcked#0001\nGroups can be unable to load, the Roblox API does not show if it loads or not.\nMake sure to tab in and out because if you're viewing the file, you only see the one when you opened it.\n\n")
@@ -220,9 +229,10 @@ function newProxy() {
 
 function startMiner() {
     var currentint = preferences.int.min;
+
     var miner = setInterval(() => {
-        if (!preferences.started == 1) { console.log(chalk.gray("[APP]:") + chalk.greenBright(" Started")); preferences.started++; } // dont you dare change this 🔫
-        if (currentint > preferences.int.max) return end(); else { currentint++; };
+        if (!preferences.started == 1) { console.log(chalk.gray("[APP]:") + chalk.greenBright(" Starting")); preferences.started = 1; } // dont you dare change this 🔫
+        if (currentint > preferences.int.max) return end(miner); else { currentint++; };
 
         if (preferences.proxy) {
             if (preferences.startingRequestMessages) {
@@ -248,7 +258,7 @@ function startMiner() {
             if (!data.owner) {
                 if (!data.isLocked) {
                     if (data.publicEntryAllowed) {
-                        valid(data)
+                        valid(data, miner)
                     }
                 }
             }
@@ -279,9 +289,9 @@ function startMiner() {
     }, preferences.interval)
 }
 
-function end() {
+function end(miner) {
     if (preferences.repeat == false) {
-        console.warn(chalk.gray("[APP]:") + " Finished")
+        console.warn(chalk.gray("[APP]:") + chalk.greenBright(" Finished"))
 
         clearInterval(miner) // Stops it from running again
     };
@@ -289,7 +299,7 @@ function end() {
     currentint = preferences.int.min;
 }
 
-function valid(data,) {
+function valid(data, miner) {
     if (preferences.logToFile.enabled) {
         wStream.write(`${data.name} - ${data.id}\n`)
     }
