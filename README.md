@@ -17,7 +17,8 @@ Install the executable for your OS, you can find it in the releases section.<br 
 Install the source code out of the latest release.<br />Make sure you have NodeJS installed.<br />Run `npm i` to install the dependencies.<br />To start the software run `node .` and enjoy!
 
 #### > Installing on [Repl It](https://replit.com)
-You can also run this on [replit.com](https://replit.com) which runs very fast without sending all those requests from your device.<br />I am giving support for running this on those sites, like [replit.com](https://replit.com)
+You can also run this on [replit.com](https://replit.com) which runs very fast without sending all those requests from your device.<br />I am giving support for running this on those sites, like [replit.com](https://replit.com)<br />
+<img src="https://cdn.discordapp.com/attachments/925754861105061968/925856179962404934/ivJxXC5qkF.gif" style="border-radius: 8px;">
 
 ## Build
 Install [`pkg`](https://www.npmjs.com/package/pkg) publicly via **NPM**<br />
