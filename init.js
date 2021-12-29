@@ -236,7 +236,11 @@ function newProxy() {
                 currentProxy.host = proxy[0]
                 currentProxy.port = proxy[1]
         
-                fs.closeSync(descriptor)
+                fs.close(descriptor, (err) => {
+                    if (preferences.errorMessages == true) {
+                        console.error(chalk.gray("[APP]:") + chalk.red(" FS Error L239 " + chalk.blueBright("!")))  
+                    } 
+                })
             } catch (err) {
                 if (preferences.errorMessages == true) {
                     console.error(chalk.gray("[APP]:") + chalk.red(" Error fetching Proxy"))  
@@ -244,7 +248,7 @@ function newProxy() {
             }
         } else if (error) {
             if (preferences.errorMessages == true) {
-                console.error(chalk.gray("[APP]:") + chalk.red(" FS Error L224"))  
+                console.error(chalk.gray("[APP]:") + chalk.red(" FS Error L224") + chalk.blueBright("!"))  
             }
         }
     })
