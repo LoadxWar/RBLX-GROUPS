@@ -232,12 +232,7 @@ if (preferences.proxy) {
 function newProxy() {
     if (!preferences.proxy) return;
 
-    if (err && preferences.errorMessages) {
-        console.error(chalk.gray("[APP]:") + chalk.red(" FS Error") + chalk.blueBright("!"))
-    }
-
     var proxies = proxies_.toString().split("\n")
-        
     if (!proxies[currentProxy.index++]) {
         currentProxy.index = 0;
     }
