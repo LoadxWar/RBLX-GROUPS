@@ -46,7 +46,7 @@ const preferences = { // err config ⚙️
     dWebhook3: "",
 }
 
-if (fs.existsSync('config.json')) {
+if (fs.existsSync(process.cwd() + '/config.json')) {
     console.log(chalk.gray("[APP]: ") + chalk.blue("Join the Discord - https://discord.gg/CT6HxZewz6"))
     console.log(chalk.gray("[APP]: ") + chalk.green("config found") + chalk.white(" (config.json)"))
     
@@ -101,7 +101,7 @@ if (fs.existsSync('config.json')) {
                                 }
 
                                 function done() {
-                                    fs.writeFileSync("config.json", JSON.stringify(preferences))
+                                    fs.writeFileSync(process.cwd() + "/config.json", JSON.stringify(preferences))
                                     console.log(chalk.gray("[APP]: ") + chalk.greenBright("Setup Finished"))
 
                                     startMiner()
@@ -194,7 +194,7 @@ if (fs.existsSync('config.json')) {
 }
 
 if (preferences.logToFile.enabled == true) {
-    var wStream = fs.createWriteStream(preferences.logToFile.fileName)
+    var wStream = fs.createWriteStream(process.cwd() + "/" + preferences.logToFile.fileName)
 
     wStream.write("Made by completelyfcked#0001\nGroups can be unable to load, the Roblox API does not show if it loads or not.\nMake sure to tab in and out because if you're viewing the file, you only see the one when you opened it.\n\n")
 }
@@ -215,7 +215,7 @@ function axiosConfig(host, port) {
 function newProxy() {
     if (!preferences.proxy) return;
 
-    var proxies = fs.readFileSync(preferences.proxyFile)
+    var proxies = fs.readFileSync(process.cwd() + "/" + preferences.proxyFile)
     proxies = proxies.toString().split("\n")
 
     if (!proxies[currentProxy.index++]) {
