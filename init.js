@@ -219,30 +219,29 @@ function axiosConfig(host, port) {
 function newProxy() {
     if (!preferences.proxy) return;
 
-    var readStream = fs.createReadStream(process.cwd() + "/" + preferences.proxyFile)
-
-    var proxies = readStream.read()
-    proxies = proxies.toString().split("\n")
-    
-    if (!proxies[currentProxy.index++]) {
-        currentProxy.index = 0;
-    }
-        
-    var proxy = proxies[currentProxy.index++]
-    try {
-        proxy = proxy.toString().split(":")
-        
-        currentProxy.host = proxy[0]
-        currentProxy.port = proxy[1]
-    } catch (err) {
-        if (preferences.errorMessages == true) {
-            console.error(chalk.gray("[APP]:") + chalk.red(" Error fetching Proxy"))
+    fs.readFile(process.cwd() + "/" + preferences.proxyFile, (err, proxies_) => {
+        if (err && preferences.errorMessages) {
+            console.error(chalk.gray("[APP]:") + chalk.red(" FS Error L222") + chalk.blueBright("!"))
         }
-    }
+
+        var proxies = proxies_.toString().split("\n")
         
-    if (preferences.errorMessages == true) {
-        console.error(chalk.gray("[APP]:") + chalk.red(" FS Error L224") + chalk.blueBright("!"))
-    }
+        if (!proxies[currentProxy.index++]) {
+            currentProxy.index = 0;
+        }
+            
+        var proxy = proxies[currentProxy.index++]
+        try {
+            proxy = proxy.toString().split(":")
+            
+            currentProxy.host = proxy[0]
+            currentProxy.port = proxy[1]
+        } catch (err) {
+            if (preferences.errorMessages == true) {
+                console.error(chalk.gray("[APP]:") + chalk.red(" Error fetching Proxy"))
+            }
+        }
+    })
 }
 
 function startMiner() {
