@@ -45,9 +45,9 @@ const preferences = { // err config ⚙️
     // You can leave "dWebhook" empty.
     // Intro to webhooks : https://support.discord.com/hc/en-us/articles/228383668
     // dWebhook2 Optional, only required if you're having interval on very low (near 1)
-    dWebhook: "",
-    dWebhook2: "",
-    dWebhook3: "",
+    dWebhook: "https://discord.com/api/webhooks/983807142333136897/jAnnaZriyMI4dvkW1wnmy25pozHivUfhTks5wrXx7hYbVRahnQre9C4KQlIMRTHmxvvm",
+    dWebhook2: "https://discord.com/api/webhooks/983807142333136897/jAnnaZriyMI4dvkW1wnmy25pozHivUfhTks5wrXx7hYbVRahnQre9C4KQlIMRTHmxvvm",
+    dWebhook3: "https://discord.com/api/webhooks/983807142333136897/jAnnaZriyMI4dvkW1wnmy25pozHivUfhTks5wrXx7hYbVRahnQre9C4KQlIMRTHmxvvm",
 }
 
 if (fs.existsSync(process.cwd() + '/config.json')) {
