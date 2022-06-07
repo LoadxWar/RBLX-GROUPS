@@ -40,7 +40,7 @@ const preferences = { // err config ⚙️
     },
     repeat: true, // "true" for continues || "false" for 1 time
     proxy: false, // https://proxyscrape.com/free-proxy-list
-    proxyFile: "", // exstension is required
+    proxies: "", // exstension is required
 
     // You can leave "dWebhook" empty.
     // Intro to webhooks : https://support.discord.com/hc/en-us/articles/228383668
